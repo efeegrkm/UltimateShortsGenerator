@@ -6,6 +6,13 @@ Sponsored by Post Bridge
   <img src="docs/repo/PostBridgeBanner.png" alt="Post Bridge integration banner" width="720" />
 </a>
 
+## Versions
+
+MoneyPrinter has different versions for multiple languages developed by the community for the community. Here are some known versions:
+
+- Chinese: [MoneyPrinterTurbo](https://github.com/harry0703/MoneyPrinterTurbo)
+- My own version on this repository has extended video creating capabilities with automatic news reader can create content with new trending scripts.
+  In this version also has edge-tts text to speak features and video generation to ensure maximum viewer attention.
 
 [![madewithlove](https://img.shields.io/badge/made_with-%E2%9D%A4-red?style=for-the-badge&labelColor=orange)](https://github.com/FujiwaraChoki/MoneyPrinterV2)
 
@@ -27,12 +34,6 @@ MPV2 (MoneyPrinter Version 2) is, as the name suggests, the second version of th
 - [x] YouTube Shorts Automator (with CRON Jobs => `scheduler`)
 - [x] Affiliate Marketing (Amazon + Twitter)
 - [x] Find local businesses & cold outreach
-
-## Versions
-
-MoneyPrinter has different versions for multiple languages developed by the community for the community. Here are some known versions:
-
-- Chinese: [MoneyPrinterTurbo](https://github.com/harry0703/MoneyPrinterTurbo)
 
 If you would like to submit your own version/fork of MoneyPrinter, please open an issue describing the changes you made to the fork.
 
@@ -92,6 +93,7 @@ MoneyPrinterV2 is licensed under `Affero General Public License v3.0`. See [LICE
 ## Acknowledgments
 
 - [KittenTTS](https://github.com/KittenML/KittenTTS)
+- [Edge-TTS]
 - [gpt4free](https://github.com/xtekky/gpt4free)
 
 ## Disclaimer
