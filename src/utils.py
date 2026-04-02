@@ -134,26 +134,37 @@ def fetch_songs() -> None:
         error(f"Error occurred while fetching songs: {str(e)}")
 
 
-def choose_random_song() -> str:
+def choose_random_song(category: str = "Success_Honour") -> str:
     """
-    Chooses a random song from the songs/ directory.
+    Chooses a random song from a specific sub-directory in the Songs/ directory.
 
-    Returns:
-        str: The path to the chosen song.
+    Args:
+        category (str): The name of the sub-folder (e.g., "dram", "felaket").
     """
     try:
-        songs_dir = os.path.join(ROOT_DIR, "Songs")
+        base_songs_dir = os.path.join(ROOT_DIR, "Songs")
+        
+        category_dir = os.path.join(base_songs_dir, category)
+        
+        # Eğer Llama saçmalarsa veya klasör yoksa, güvenli liman olarak ilk bulduğuna git
+        if not os.path.exists(category_dir):
+            warning(f"'{category}' directory not found in Songs/. Falling back to base Songs/ directory.")
+            category_dir = base_songs_dir # Veya var olan 'Klasik' klasörünü yedek yapabilirsin
+
         songs = [
             name
-            for name in os.listdir(songs_dir)
-            if os.path.isfile(os.path.join(songs_dir, name))
+            for name in os.listdir(category_dir)
+            if os.path.isfile(os.path.join(category_dir, name))
             and name.lower().endswith((".mp3", ".wav", ".m4a", ".aac", ".ogg"))
         ]
+        
         if len(songs) == 0:
-            raise RuntimeError("No audio files found in Songs directory")
+            raise RuntimeError(f"'{category_dir}' must contain at least one audio file for the '{category}' category.")
+            
         song = random.choice(songs)
-        success(f" => Chose song: {song}")
-        return os.path.join(ROOT_DIR, "Songs", song)
+        success(f" => Seçilen Duygu: [{category}] - Şarkı: {song}")
+        
+        return os.path.join(category_dir, song)
     except Exception as e:
-        error(f"Error occurred while choosing random song: {str(e)}")
+        error(f"Rastgele şarkı seçilirken hata oluştu: {str(e)}")
         raise

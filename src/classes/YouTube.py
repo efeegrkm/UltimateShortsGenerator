@@ -5,10 +5,12 @@ import time
 import os
 import requests
 import assemblyai as aai
+import feedparser
+import asyncio
+import edge_tts
 
 from utils import *
 from cache import *
-from .Tts import TTS
 from llm_provider import generate_text
 from config import *
 from status import *
@@ -149,6 +151,294 @@ class YouTube:
 
         return completion
 
+    def generate_trending_reddit_script(self) -> str:
+        """
+        Fetches top trending posts from Reddit (last month),
+        picks the most viral one using an LLM,
+        fetches the top 10 comments of that post to capture public sentiment,
+        and uses the LLM to write a highly engaging Shorts script based on the event and comments.
+        """
+
+        print(colored("[+] Reddit üzerinden viral başlıklar taranıyor...", "blue"))
+
+        subreddits = [
+            "worldnews",
+            "nottheonion",
+            "news",
+            "popculturechat",
+            "WeirdNews",
+            "OutOfTheLoop",
+            "Damnthatsinteresting"
+        ]
+
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+        }
+
+        posts_data = []
+        post_id_map = {} # Maps an ID to its URL and title for later use
+        current_id = 1
+
+        log_file_path = os.path.join(ROOT_DIR, "scraped_reddit_news.txt")
+        with open(log_file_path, "a", encoding="utf-8") as f:
+            f.write(f"\n\n--- TARAMA TARİHİ: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} ---\n")
+        for sub in subreddits:
+            try:
+                # Top posts of the month, limit 10 per sub
+                url = f"https://www.reddit.com/r/{sub}/top.json?t=month&limit=10"
+                response = requests.get(url, headers=headers, timeout=10)
+                
+                if response.status_code == 200:
+                    data = response.json()
+                    children = data.get("data", {}).get("children", [])
+                    with open(log_file_path, "a", encoding="utf-8") as f:
+                        f.write(f"\nSubreddit: r/{sub}\n")
+                    
+                    for child in children:
+                        post = child.get("data", {})
+                        if post.get("stickied", False):
+                            continue
+                        title = post.get("title", "")
+                        permalink = post.get("permalink", "")
+                        ups = post.get("ups", 0)
+
+                        if title and permalink:
+                            full_url = f"https://www.reddit.com{permalink}"
+                            posts_data.append(f"[{current_id}] Title: {title}")
+                            post_id_map[str(current_id)] = {
+                                "title": title,
+                                "url": full_url
+                            }
+                            with open(log_file_path, "a", encoding="utf-8") as f:
+                                f.write(f"  [{current_id}] ({ups} up) - {title}\n")
+                            current_id += 1
+            except Exception as e:
+                warning(f"Failed to fetch data from r/{sub}: {e}")
+                continue
+
+        if not posts_data:
+            error("Reddit could not provide any posts. Falling back to standard topic generation.")
+            self.generate_topic()
+            return self.generate_script()
+
+        raw_posts_text = "\n".join(posts_data)
+        print(colored(f"[+] Total {len(posts_data)} viral reddit posts found.", "cyan"))
+
+        editor_prompt = f"""
+        Here is a list of top trending Reddit posts from this month:
+        {raw_posts_text}
+
+        TASK: 
+        You are an expert viral content editor for YouTube Shorts. 
+        Read the list and choose the SINGLE most shocking,scandalous, or highly debated story that would make a perfect viral video.
+        
+        CRITICAL RULE: Return ONLY the exact ID number (e.g., 5) of the post you chose. 
+        DO NOT explain your choice. DO NOT write the title. JUST THE NUMBER.
+        """
+        
+        try:
+            best_story_id_str = str(self.generate_response(editor_prompt)).strip()
+            # Extract just the number in case Llama adds extra text
+            match = re.search(r'\d+', best_story_id_str)
+            if match:
+                selected_id = match.group(0)
+            else:
+                selected_id = "1" # Fallback
+                
+            if selected_id not in post_id_map:
+                 selected_id = list(post_id_map.keys())[0]
+
+        except Exception as e:
+             warning(f"Editor selection failed: {e}. Falling back to the first post.")
+             selected_id = list(post_id_map.keys())[0]
+
+        selected_post = post_id_map[selected_id]
+        selected_title = selected_post["title"]
+        selected_url = selected_post["url"]
+
+        if get_verbose():
+            print(colored(f"[+] Editor's Selection (ID {selected_id}):\n{selected_title}", "green"))
+        
+        print(colored("[+] Fetching the top 10 most upvoted comments for the selected post...", "cyan"))
+
+        # Fetch top 10 comments for the selected post
+        comments_data = []
+        try:
+            # Append .json to the permalink to get post data + comments
+            comment_url = f"{selected_url}.json"
+            response = requests.get(comment_url, headers=headers, timeout=10)
+            
+            if response.status_code == 200:
+                data = response.json()
+                # data[1] contains the comments tree
+                comments_list = data[1].get("data", {}).get("children", [])
+                
+                # Extract top 10 top-level comments
+                count = 0
+                for comment in comments_list:
+                    if count >= 10:
+                        break
+                    
+                    kind = comment.get("kind")
+                    if kind == "t1": # t1 means it's a comment
+                        body = comment.get("data", {}).get("body", "")
+                        ups = comment.get("data", {}).get("ups", 0)
+                        
+                        # Filter out deleted/removed comments
+                        if body and body not in ["[deleted]", "[removed]"]:
+                            # Clean up newlines for cleaner prompt
+                            clean_body = body.replace('\n', ' ').strip()
+                            comments_data.append(f"- (Upvotes: {ups}) {clean_body}")
+                            count += 1
+                            
+        except Exception as e:
+            warning(f"Yorumlar çekilirken hata oluştu: {e}")
+
+        raw_comments_text = "\n".join(comments_data) if comments_data else "No comments available."
+
+        print(colored("[+] Gemini (Script Writer) writing the script...", "cyan"))
+
+        # STORYTELLER LLAMA (Writing the script with public sentiment)
+        sentence_length = get_script_sentence_length()
+        writer_prompt = f"""
+        STORY / EVENT: {selected_title}
+        
+        TOP 10 PUBLIC COMMENTS (The Sentiment):
+        {raw_comments_text}
+
+        TASK:
+        Write a {sentence_length}-sentence YouTube Shorts script based on this event.
+        
+        CRITICAL NARRATIVE RULES:
+        1. YOU MUST INCORPORATE THE PUBLIC SENTIMENT: Use the top comments provided to understand how people feel about this event (e.g., are they angry, mocking, supportive, shocked?). 
+        2. WEAVE THE SENTIMENT INTO THE SCRIPT: Describe the event, but also mention the public backlash, theories, or jokes. (e.g., "People are absolutely losing their minds over this, with some saying...")
+        3. SAFETY WARNING (CRITICAL): You are writing for YouTube. DO NOT directly quote or copy any profanity, slurs, or highly toxic language from the comments. Understand the *emotion* of the comment and rewrite it cleanly. (e.g., change "This guy is a f***ing idiot" to "The internet is mercilessly dragging him for this decision").
+
+        FORMATTING & PACING RULES:
+        1. Script must be exactly {sentence_length} sentences long.
+        2. Start immediately with a massive hook translated naturally to {self.language}. (e.g., "Did you hear about..." or "The internet is divided over...").
+        3. Write the script entirely in {self.language}.
+        4. Keep your language easy to understand.
+        5. End with an open-ended question or cliffhanger that encourages viewers to comment based on the sentiment you presented.
+        
+        STRICT OUTPUT RULES:
+        DO NOT write anything else other than the script. 
+        NO markdown, NO titles, NO voiceover tags (like [Narrator]). 
+        DO NOT ADD ANY INTRODUCTIONS before going into the script. 
+        JUST RETURN THE RAW SPOKEN SCRIPT.
+        """
+        
+        completion = self.generate_response(writer_prompt)
+        completion = re.sub(r"\*", "", completion)
+
+        if not completion:
+            error("Senaryo üretilemedi, normal konuya dönülüyor.")
+            return self.generate_script()
+
+        self.script = completion
+        
+        # Video visual subject extraction for metadata and image generation
+        self.subject = self.generate_response(f"What is the core visual subject of this script in 4-6 words? Script: {self.script}. Return only the words.")
+
+        if get_verbose():
+            success(f"Generated Viral Script (with Public Sentiment):\n{self.script}")
+
+        return completion
+
+    def generate_trending_news_script(self) -> str:
+        """
+        Fetches news from multiple RSS feeds (Weird News & Gossip), 
+        uses LLM to pick the absolute most viral one,
+        and then uses LLM again to write a hook-heavy Shorts script.
+        """
+
+        print(colored("[+] Tuhaf Haberler ve Magazin kaynakları taranıyor...", "blue"))
+
+        rss_feeds = [
+            "https://www.tmz.com/rss.xml", # Hollywood Magazin
+            "https://www.eonline.com/syndication/feeds/rssfeeds/topstories.xml", # Ünlü Dedikoduları
+            "https://www.mirror.co.uk/news/weird-news/?service=rss", # Mirror Tuhaf Haberler
+            "https://feeds.skynews.com/feeds/rss/strange.xml" # Sky News İlginç/Tuhaf Haberler
+        ]
+
+        news_items = []
+        news_id = 1
+        
+        for feed_url in rss_feeds:
+            try:
+                feed = feedparser.parse(feed_url)
+                entry_count = 10
+                if(feed.entries.__len__() < 10):
+                    entry_count = feed.entries.__len__()
+                for entry in feed.entries[:entry_count]:
+                    news_items.append(f"[{news_id}] Headline: {entry.title} - Summary: {entry.get('summary', '')}")
+                    news_id += 1
+            except Exception as e:
+                continue
+        
+        raw_news_data = "\n".join(news_items)
+
+        print(colored(f"[+] Toplam {len(news_items)} güncel haber toplandı. Llama 3 (Editör) en viral olanı seçiyor...", "cyan"))
+
+        # EDITOR LLAMA (Selecting the most viral story)
+        editor_prompt = f"""
+        Here is a list of today's weird news and gossip:
+        {raw_news_data}
+
+        TASK: 
+        You are an expert viral content editor. Read the list and choose the SINGLE most shocking, weird, or scandalous story that would make a perfect viral YouTube Short.
+        Selected story should have a strong hook and narratable or has to be a newsworthy event that can be turned into a narratable story. Or about a known celebrity with a good story.
+        Return ONLY the Headline and Summary of the story you chose. The summary and the event should be narratable.
+        DO NOT explain your choice. DO NOT add any extra text. DO NOT start with here is your summary etc. JUST RETURN THE RAW HEADLINE AND DETAILED SUMMARY OF THE MOST VIRAL STORY.
+        """
+        
+        best_story = self.generate_response(editor_prompt)
+        
+        if get_verbose():
+            print(colored(f"[+] Editörün Seçimi:\n{best_story}", "green"))
+        print(colored("[+] Llama 3 (Senarist) bu haberi viral bir Shorts senaryosuna çeviriyor...", "cyan"))
+
+        # STORYTELLER LLAMA (Writing the script with a hook)
+        sentence_length = get_script_sentence_length()
+        writer_prompt = f"""
+        Story: {best_story}
+
+        TASK:
+        Write a {sentence_length}-sentence YouTube Shorts script based on this content/story.
+        Script must be {sentence_length}-sentences long.
+        DO NOT write anything else other than the script. DO NOT add any titles, headings, or voiceover tags, DO NOT ADD ANY INTRODUCTIONS before going into the script. JUST RETURN THE RAW SCRIPT.
+        RULES:
+        1. If the video content is about a weird shocking new etc. start with a massive hook like "Did you hear about..." or "You won't believe what just happened..." (Translate the hook naturally to {self.language}).
+        2. If the video content is about a celebrity gossip, start with a hook like "Guess what <celebrity_name> just did..." or "You won't believe what <celebrity_name> is up to..." (Translate the hook naturally to {self.language}).
+        3. Keep the tone highly engaging, fast-paced, mysterious, and like you are telling a juicy secret. You can use Hooks-Development-Cliffhanger structure if it fits the story. The script should be written in a way that maximizes viewer retention.
+        4. Write the script entirely in {self.language}.
+        5. Use short sentences and end with a cliffhanger to maximize viewer retention.
+        6. Strictly avoid dry, encyclopedic, or wiki-style factual recitations.
+        7. Keep your language easy to understand for non-native speakers, avoid complex words and jargon.
+        8. DO NOT use sensitive words that trigger AI safety filters. Avoid them or change them with synonyms.
+        9. You can give an open edge to viewers to write comments like "What would you do this in this situation?" or "Do you think it is acceptable for a diplomate to do this?" etc. Just do this naturally if it fits the story, don't force it.
+        10. CRITICAL RULE: No markdown, no titles, no voiceover tags. JUST RETURN THE RAW SPOKEN SCRIPT.
+        11. CRITICAL RULE: DO NOT write "Here is the script" OR ANY INDUCTORY TEXT. Start IMMEDIATELY with the first word of the script. DO NOT output any conversational filler.
+        12. ONLY RETURN THE RAW CONTENT OF THE SCRIPT. DO NOT INCLUDE "VOICEOVER", "NARRATOR" OR SIMILAR INDICATORS OF WHAT SHOULD BE SPOKEN AT THE BEGINNING OF EACH PARAGRAPH OR LINE. YOU MUST NOT MENTION THE PROMPT, OR ANYTHING ABOUT THE SCRIPT ITSELF. ALSO, NEVER TALK ABOUT THE AMOUNT OF PARAGRAPHS OR LINES. JUST WRITE THE SCRIPT. DO NOT START WITH ANY INTRODUCTION SENTENCE.
+        """
+        
+        completion = self.generate_response(writer_prompt)
+        completion = re.sub(r"\*", "", completion)
+
+        if not completion:
+            error("Senaryo üretilemedi, normal konuya dönülüyor.")
+            return self.generate_script()
+
+        self.script = completion
+        
+        # Video visual subject extraction for metadata and image generation
+        self.subject = self.generate_response(f"What is the core visual subject of this script in 4-6 words? Script: {self.script}. Return only the words.")
+
+        if get_verbose():
+            success(f"Generated Viral Script:\n{self.script}")
+
+        return completion
+
     def generate_script(self) -> str:
         """
         Generate a script for a video, depending on the subject of the video, the number of paragraphs, and the AI model.
@@ -168,6 +458,20 @@ class YouTube:
         Do not under any circumstance reference this prompt in your response.
 
         Get straight to the point, don't start with unnecessary things like, "welcome to this video".
+
+        There are some guidelines you should follow:
+        1)Core Narrative Style (Edutainment & Mystery): Strictly avoid dry, encyclopedic, or wiki-style factual recitations. Adopt the persona of a mysterious, captivating storyteller revealing hidden truths. Use short, punchy sentences and emotionally charged adjectives (e.g., terrifying, forgotten, forbidden, chilling).
+
+        2)Factual Flexibility for Engagement: Your primary goal is 100% viewer retention and entertainment, not 100% strict historical accuracy. You have explicit permission to slightly bend historical truths, lean into urban legends, or present compelling conspiracy theories as dramatic possibilities. Make the mundane sound deeply conspiratorial or mysterious.
+
+        3)The "No-Intro" Rule: NEVER start the script with generic introductions like "Today we will talk about...", "Did you know...", or "Welcome to...". Dive straight into the narrative.
+
+        4)Strict 3-Act Structure:
+            1. The Hook (First 1-2 sentences): Start immediately with a shocking claim, an unsettling visual description, or a mind-bending question that challenges what the viewer thinks they know.
+            2. The Development (Core narrative): Tell the story like a gripping thriller. Frame the events around secret agendas, hidden motives, or inexplicable phenomena. Connect the dots in a way that builds continuous tension.
+            3. The Climax & Cliffhanger (Last 1-2 sentences): Do not resolve the story neatly. End with a profound, lingering question or a plot twist that leaves the audience questioning reality and eager to comment.
+
+        Pacing & Delivery: Write the script specifically for a deep, charismatic voiceover. Use ellipses (...) and paragraph breaks to indicate dramatic pauses. The script should read like a dramatic monologue from a suspense thriller.
 
         Obviously, the script should be related to the subject of the video.
         
@@ -220,39 +524,108 @@ class YouTube:
         self.metadata = {"title": title, "description": description}
 
         return self.metadata
-
-    def generate_prompts(self) -> List[str]:
+    
+    def analyze_script_mood(self) -> str:
         """
+        Llama 3'ü kullanarak senaryonun duygu durumunu analiz eder 
+        ve ona uygun bir müzik klasörü adı döndürür.
+        """
+        info(" => Senaryo duygu analizi yapılıyor (Müzik seçimi için)...")
+        
+        prompt = f"""
+        Analyze the following video script and determine its core mood or theme.
+        
+        You MUST choose ONLY ONE number from the list below that best matches the script.
+        
+        1 = Mystery, secrets, hidden facts
+        2 = Success, pride, overcoming obstacles
+        3 = Sadness, emotional struggles, tragedy
+        4 = Disaster, catastrophe, shocking bad news
+        5 = Happiness, wholesome, good news
+        6 = Sorrow, grief, heartbreaking
+        
+        Script:
+        {self.script}
+        
+        STRICT RULES:
+        Return ONLY a single digit number (1, 2, 3, 4, 5, or 6).
+        NO text. NO explanations. NO markdown. Just the number.
+        """
+        
+        try:
+            completion = str(self.generate_response(prompt))
+            import re
+            match = re.search(r'[1-6]', completion)
+            
+            if match:
+                choice = int(match.group(0))
+            else:
+                choice = 1 
+
+            mood_map = {
+                1: "Mystery",
+                2: "Success_Honour",
+                3: "Sadness",
+                4: "Disaster",
+                5: "Happiness",
+                6: "Sorrow"
+            }
+            
+            selected_mood = mood_map.get(choice, "Success_Honour")
+            info(f" => Llama Duygu Seçimi: {choice} -> Klasör: {selected_mood}")
+            
+            return selected_mood
+            
+        except Exception as e:
+            warning(f"Duygu analizi başarısız oldu: {e}. Varsayılan klasör seçiliyor.")
+            return "Success_Honour" 
+        
+    def generate_prompts(self) -> List[str]:
+        """ 
         Generates AI Image Prompts based on the provided Video Script.
+        Uses advanced prompt engineering for Image-to-Image (I2I) continuity using the <1> tag.
 
         Returns:
             image_prompts (List[str]): Generated List of image prompts.
         """
-        n_prompts = len(self.script) / 3
-
+        
         prompt = f"""
-        Generate {n_prompts} Image Prompts for AI Image Generation,
-        depending on the subject of a video.
+        Act as an expert storyboard artist and cinematic director.
+        Your task is to break down the following video script into a chronological sequence of image prompts for an AI Image Generator.
+
         Subject: {self.subject}
 
-        The image prompts are to be returned as
-        a JSON-Array of strings.
+        CORE RULES FOR CONSISTENCY AND STORYTELLING:
+        1. DYNAMIC FRAME COUNT: Use exactly as many frames as needed to tell the story visually from beginning to end. If a quick action needs 3 frames, use 3. If a complex story needs 12, use 12.
+        
+        2. CHRONOLOGICAL PROGRESSION: Each prompt must represent a new, distinct beat in the story. Do not repeat the same action just with different colors. The images must flow logically.
+        
+        3. THE REFERENCE TAG (<1>) FOR VISUAL CONTINUITY (CRITICAL RULE): 
+           You have access to an Image-to-Image memory system. 
+           - IF a frame takes place in the EXACT SAME SCENE with the SAME CHARACTERS as the IMMEDIATELY PRECEDING frame, you MUST add the tag <1> at the very end of the prompt.
+           - WHEN USING <1>: You can just refer to the previous image. (e.g., "The same man from the reference image is now running <1>").
+           - NEVER use the <1> tag on the very first frame, as there is no previous image to reference.
+           
+        4. SCENE CHANGES (NO TAG):
+           - IF the scene changes to a NEW LOCATION, a NEW TIME, or introduces COMPLETELY NEW SUBJECTS, DO NOT use the <1> tag.
+           - When there is NO tag, you MUST provide a highly detailed, full description of the new environment and characters from scratch.
+           
+        5. CINEMATIC DETAIL & SAFETY: Use engaging, cinematic adjectives (e.g., "dramatic lighting", "wide angle", "hyper-realistic"). DO NOT use sensitive words (e.g., avoid blood, kill, shoot, naked, gore). Use safe synonyms.
 
-        Each search term should consist of a full sentence,
-        always add the main subject of the video.
+        OUTPUT FORMAT:
+        You must return a raw JSON-Array of strings. 
+        YOU MUST ONLY RETURN THE JSON-ARRAY OF STRINGS. NO intro text, NO markdown formatting, NO comments.
 
-        Be emotional and use interesting adjectives to make the
-        Image Prompt as detailed as possible.
+        YOUR OUTPUT MUST BE IN THE FOLLOWING EXAMPLE FORMAT:
+        EXAMPLE FORMAT AND LOGIC:
+        [
+            "A tall muscular man wearing a torn blue denim jacket walking down a rainy, neon-lit cyberpunk alleyway. Cinematic lighting, 8k resolution",
+            "The same man from the reference image looking over his shoulder in panic as a shadow approaches him in the alleyway <1>",
+            "The man in the reference image sprinting away fast, motion blur <1>",
+            "A completely new scene: Inside a brightly lit, futuristic police station where a detective is looking at a computer screen. Wide angle, hyper-detailed"
+        ]
 
-        YOU MUST ONLY RETURN THE JSON-ARRAY OF STRINGS.
-        YOU MUST NOT RETURN ANYTHING ELSE.
-        YOU MUST NOT RETURN THE SCRIPT.
-
-        The search terms must be related to the subject of the video.
-        Here is an example of a JSON-Array of strings:
-        ["image prompt 1", "image prompt 2", "image prompt 3"]
-
-        For context, here is the full text:
+        For context, here is the full video script:
         {self.script}
         """
 
@@ -264,33 +637,32 @@ class YouTube:
 
         image_prompts = []
 
-        if "image_prompts" in completion:
-            image_prompts = json.loads(completion)["image_prompts"]
-        else:
+        start_idx = completion.find('[')
+        end_idx = completion.rfind(']')
+
+        if start_idx != -1 and end_idx != -1 and end_idx > start_idx:
+            json_str = completion[start_idx:end_idx + 1]
             try:
-                image_prompts = json.loads(completion)
+                import json
+                image_prompts = json.loads(json_str)
+            except Exception as e:
                 if get_verbose():
-                    info(f" => Generated Image Prompts: {image_prompts}")
-            except Exception:
-                if get_verbose():
-                    warning(
-                        "LLM returned an unformatted response. Attempting to clean..."
-                    )
+                    warning(f"LLM JSON formatını bozdu: {e}. Tekrar deneniyor...")
+                return self.generate_prompts()
+        else:
+            if get_verbose():
+                warning("LLM cevabında liste [...] bulunamadı. Tekrar deneniyor...")
+                print(completion)
+            return self.generate_prompts()
 
-                # Get everything between [ and ], and turn it into a list
-                r = re.compile(r"\[.*\]")
-                image_prompts = r.findall(completion)
-                if len(image_prompts) == 0:
-                    if get_verbose():
-                        warning("Failed to generate Image Prompts. Retrying...")
-                    return self.generate_prompts()
-
-        if len(image_prompts) > n_prompts:
-            image_prompts = image_prompts[: int(n_prompts)]
+        if not isinstance(image_prompts, list) or len(image_prompts) == 0:
+            if get_verbose():
+                warning("Geçerli bir liste oluşturulamadı. Tekrar deneniyor...")
+            return self.generate_prompts()
 
         self.image_prompts = image_prompts
 
-        success(f"Generated {len(image_prompts)} Image Prompts.")
+        success(f"Generated {len(image_prompts)} highly consistent Image Prompts with I2I Tagging.")
 
         return image_prompts
 
@@ -316,18 +688,17 @@ class YouTube:
         self.images.append(image_path)
         return image_path
 
-    def generate_image_nanobanana2(self, prompt: str) -> str:
+    def generate_image_nanobanana2(self, prompt: str, reference_image: str = None) -> str:
         """
-        Generates an AI Image using Nano Banana 2 API (Gemini image API).
-
-        Args:
-            prompt (str): Prompt for image generation
-
-        Returns:
-            path (str): The path to the generated image.
+        Generates an AI Image using Nano Banana 2 API (Gemini image API), optionally using a reference image.
         """
-        print(f"Generating Image using Nano Banana 2 API: {prompt}")
+        if get_verbose():
+            ref_status = "WITH reference" if reference_image else "NO reference"
+            info(f"Generating Image using Nano Banana 2 API ({ref_status}): {prompt}")
+        else:
+            print(f"Generating Image using Nano Banana 2 API: {prompt}")
 
+        time.sleep(5)
         api_key = get_nanobanana2_api_key()
         if not api_key:
             error("nanobanana2_api_key is not configured.")
@@ -338,8 +709,32 @@ class YouTube:
         aspect_ratio = get_nanobanana2_aspect_ratio()
 
         endpoint = f"{base_url}/models/{model}:generateContent"
+        
+        # Temel Payload
+        parts = [{"text": prompt}]
+
+        # Referans görsel varsa ve yolda mevcutsa ekle
+        if reference_image and os.path.exists(reference_image):
+            try:
+                import mimetypes
+                with open(reference_image, "rb") as f:
+                    img_data = base64.b64encode(f.read()).decode("utf-8")
+                
+                mime_type, _ = mimetypes.guess_type(reference_image)
+                if not mime_type:
+                    mime_type = "image/png"
+
+                parts.append({
+                    "inlineData": {
+                        "mimeType": mime_type,
+                        "data": img_data
+                    }
+                })
+            except Exception as e:
+                warning(f"Referans görsel eklenemedi, sadece metin ile devam ediliyor: {e}")
+
         payload = {
-            "contents": [{"parts": [{"text": prompt}]}],
+            "contents": [{"parts": parts}],
             "generationConfig": {
                 "responseModalities": ["IMAGE"],
                 "imageConfig": {"aspectRatio": aspect_ratio},
@@ -377,42 +772,66 @@ class YouTube:
                 warning(f"Failed to generate image with Nano Banana 2 API: {str(e)}")
             return None
 
-    def generate_image(self, prompt: str) -> str:
+    def generate_image(self, prompt: str, reference_image: str = None) -> str:
         """
         Generates an AI Image based on the given prompt using Nano Banana 2.
 
         Args:
             prompt (str): Reference for image generation
+            referance_image: if using an image input in the image prompt.
 
         Returns:
             path (str): The path to the generated image.
         """
-        return self.generate_image_nanobanana2(prompt)
+        return self.generate_image_nanobanana2(prompt, reference_image)
 
-    def generate_script_to_speech(self, tts_instance: TTS) -> str:
+    # def generate_script_to_speech(self, tts_instance: TTS) -> str:
+    #     """
+    #     Converts the generated script into Speech using KittenTTS and returns the path to the wav file.
+
+    #     Args:
+    #         tts_instance (tts): Instance of TTS Class.
+
+    #     Returns:
+    #         path_to_wav (str): Path to generated audio (WAV Format).
+    #     """
+    #     path = os.path.join(ROOT_DIR, ".mp", str(uuid4()) + ".wav")
+
+    #     # Clean script, remove every character that is not a word character, a space, a period, a question mark, or an exclamation mark.
+    #     self.script = re.sub(r"[^\w\s.?!]", "", self.script)
+
+    #     tts_instance.synthesize(self.script, path)
+
+    #     self.tts_path = path
+
+    #     if get_verbose():
+    #         info(f' => Wrote TTS to "{path}"')
+
+    #     return path
+
+    def generate_script_to_speech(self) -> str:
         """
-        Converts the generated script into Speech using KittenTTS and returns the path to the wav file.
-
-        Args:
-            tts_instance (tts): Instance of TTS Class.
-
-        Returns:
-            path_to_wav (str): Path to generated audio (WAV Format).
+        Converts the generated script into Speech using Microsoft Edge-TTS (Bulut Sesleri).
         """
-        path = os.path.join(ROOT_DIR, ".mp", str(uuid4()) + ".wav")
+        path = os.path.join(ROOT_DIR, ".mp", str(uuid4()) + ".mp3") 
 
-        # Clean script, remove every character that is not a word character, a space, a period, a question mark, or an exclamation mark.
         self.script = re.sub(r"[^\w\s.?!]", "", self.script)
 
-        tts_instance.synthesize(self.script, path)
+        voice = get_tts_voice() or "en-US-ChristopherNeural"
+
+        if get_verbose():
+            info(f" => Generating quality audio with Edge-TTS using voice: {voice}")
+
+        communicate = edge_tts.Communicate(self.script, voice)
+        asyncio.run(communicate.save(path))
 
         self.tts_path = path
 
         if get_verbose():
-            info(f' => Wrote TTS to "{path}"')
+            info(f' => Wrote quality TTS to "{path}"')
 
         return path
-
+    
     def add_video(self, video: dict) -> None:
         """
         Adds a video to the cache.
@@ -473,7 +892,7 @@ class YouTube:
             path (str): Path to SRT file
         """
         aai.settings.api_key = get_assemblyai_api_key()
-        config = aai.TranscriptionConfig()
+        config = aai.TranscriptionConfig(speech_models=["universal-2"])
         transcriber = aai.Transcriber(config=config)
         transcript = transcriber.transcribe(audio_path)
         subtitles = transcript.export_subtitles_srt()
@@ -549,7 +968,7 @@ class YouTube:
 
         return srt_path
 
-    def combine(self) -> str:
+    def combine(self, mood_category: str = "Success_Honour") -> str:
         """
         Combines everything into the final video.
 
@@ -565,13 +984,14 @@ class YouTube:
         # Make a generator that returns a TextClip when called with consecutive
         generator = lambda txt: TextClip(
             txt,
-            font=os.path.join(get_fonts_dir(), get_font()),
-            fontsize=100,
-            color="#FFFF00",
-            stroke_color="black",
-            stroke_width=5,
-            size=(1080, 1920),
-            method="caption",
+            font=os.path.join(get_fonts_dir(), "Inter-Black.ttf"), 
+            fontsize=100,       
+            color="white",         
+            stroke_color="black", 
+            stroke_width=2, 
+            interline=5,     
+            size=(1080, 1920),  
+            method="caption",   
         )
 
         print(colored("[+] Combining images...", "blue"))
@@ -617,12 +1037,12 @@ class YouTube:
 
         final_clip = concatenate_videoclips(clips)
         final_clip = final_clip.set_fps(30)
-        random_song = choose_random_song()
+        random_song = choose_random_song(category=mood_category)
 
         subtitles = None
         try:
             subtitles_path = self.generate_subtitles(self.tts_path)
-            equalize_subtitles(subtitles_path, 10)
+            equalize_subtitles(subtitles_path, 40)
             subtitles = SubtitlesClip(subtitles_path, generator)
             subtitles.set_pos(("center", "center"))
         except Exception as e:
@@ -646,21 +1066,25 @@ class YouTube:
 
         return combined_image_path
 
-    def generate_video(self, tts_instance: TTS) -> str:
+    def generate_video(self, method: str = "niche") -> str:
         """
-        Generates a YouTube Short based on the provided niche and language.
+        Generates a YouTube Short based on the selected method.
 
         Args:
             tts_instance (TTS): Instance of TTS Class.
+            method (str): "niche" for standard topic generation, "trends" for trending news.
 
         Returns:
             path (str): The path to the generated MP4 File.
         """
-        # Generate the Topic
-        self.generate_topic()
-
-        # Generate the Script
-        self.generate_script()
+        # Seçilen metoda göre konu ve senaryo üret
+        if method == "news_trends":
+            self.generate_trending_news_script()
+        elif method == "reddit_trends":
+            self.generate_trending_reddit_script()
+        else:
+            self.generate_topic()
+            self.generate_script()
 
         # Generate the Metadata
         self.generate_metadata()
@@ -669,14 +1093,38 @@ class YouTube:
         self.generate_prompts()
 
         # Generate the Images
+        previous_image_path = None
+        
         for prompt in self.image_prompts:
-            self.generate_image(prompt)
+            use_reference = False
+            clean_prompt = prompt
+            
+            # LLM "<1>" tag check
+            if "<1>" in prompt:
+                use_reference = True
+                clean_prompt = prompt.replace("<1>", "").strip()
+                
+                if get_verbose():
+                    info(" -> Continuity detected (<1>), getting previous image as ref.")
+
+            # image gen
+            if use_reference and previous_image_path:
+                current_image_path = self.generate_image(clean_prompt, reference_image=previous_image_path)
+            else:
+                current_image_path = self.generate_image(clean_prompt, reference_image=None)
+
+            # store on success
+            if current_image_path:
+                previous_image_path = current_image_path
 
         # Generate the TTS
-        self.generate_script_to_speech(tts_instance)
+        self.generate_script_to_speech()
 
-        # Combine everything
-        path = self.combine()
+        #Mood detect for song selection.
+        script_mood = self.analyze_script_mood()
+
+        # Combine everything (Bulduğumuz duyguyu combine'a gönderiyoruz)
+        path = self.combine(mood_category=script_mood)
 
         if get_verbose():
             info(f" => Generated Video: {path}")
@@ -684,7 +1132,7 @@ class YouTube:
         self.video_path = os.path.abspath(path)
 
         return path
-
+    
     def get_channel_id(self) -> str:
         """
         Gets the Channel ID of the YouTube Account.

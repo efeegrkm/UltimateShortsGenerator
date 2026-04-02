@@ -1,5 +1,7 @@
 import schedule
 import subprocess
+import requests
+from config import get_nanobanana2_api_key
 
 from art import *
 from cache import *
@@ -8,7 +10,6 @@ from config import *
 from status import *
 from uuid import uuid4
 from constants import *
-from classes.Tts import TTS
 from termcolor import colored
 from classes.Twitter import Twitter
 from classes.YouTube import YouTube
@@ -17,6 +18,27 @@ from classes.Outreach import Outreach
 from classes.AFM import AffiliateMarketing
 from llm_provider import list_models, select_model, get_active_model
 from post_bridge_integration import maybe_crosspost_youtube_short
+
+def list_google_models():
+    """
+    This function lists the available google llm models.
+    """
+    api_key = get_nanobanana2_api_key()
+    
+    url = f"https://generativelanguage.googleapis.com/v1beta/models?key={api_key}"
+    
+    print("Connecting google\n")
+    response = requests.get(url)
+    
+    if response.status_code == 200:
+        models = response.json().get('models', [])
+        for model in models:
+            if 'generateContent' in model.get('supportedGenerationMethods', []):
+                print(f"API Name: {model['name'].replace('models/', '')}")
+                print(f"Real Name: {model.get('displayName', 'Bilinmiyor')}")
+                print("-" * 40)
+    else:
+        print(f"Error: {response.status_code} - {response.text}")
 
 def main():
     """Main entry point for the application, providing a menu-driven interface
@@ -158,10 +180,26 @@ def main():
 
                     # Get user input
                     user_input = int(question("Select an option: "))
-                    tts = TTS()
 
-                    if user_input == 1:
-                        youtube.generate_video(tts)
+                    if user_input == 1 or user_input == 2:
+                        if user_input == 1:
+                            generation_method = "niche"
+                        elif user_input == 2:
+                            info("\n--- SELECT TREND SOURCE ---", False)
+                            print(colored(" 1. General News Sources (RSS)", "cyan"))
+                            print(colored(" 2. Reddit (Viral Titles and Comments)", "cyan"))
+                            
+                            trend_choice = int(question("Select your option (1 or 2): "))
+                            
+                            if trend_choice == 1:
+                                generation_method = "news_trends"
+                            elif trend_choice == 2:
+                                generation_method = "reddit_trends"
+                            else:
+                                warning("Invalid selection. Defaulting to Reddit Trends.")
+                                generation_method = "reddit_trends"
+                        
+                        youtube.generate_video(method=generation_method)
                         upload_to_yt = question("Do you want to upload this video to YouTube? (Yes/No): ")
                         if upload_to_yt.lower() == "yes":
                             upload_success = youtube.upload_video()
@@ -173,7 +211,7 @@ def main():
                                 )
                             else:
                                 warning("YouTube upload failed. Skipping Post Bridge cross-post.")
-                    elif user_input == 2:
+                    elif user_input == 3:
                         videos = youtube.get_videos()
 
                         if len(videos) > 0:
@@ -190,7 +228,7 @@ def main():
                             print(videos_table)
                         else:
                             warning(" No videos found.")
-                    elif user_input == 3:
+                    elif user_input == 4:
                         info("How often do you want to upload?")
 
                         info("\n============ OPTIONS ============", False)
@@ -218,7 +256,7 @@ def main():
                             success("Set up CRON Job.")
                         else:
                             break
-                    elif user_input == 4:
+                    elif user_input == 5:
                         if get_verbose():
                             info(" => Climbing Options Ladder...", False)
                         break
@@ -436,6 +474,7 @@ def main():
     
 
 if __name__ == "__main__":
+    # list_google_models()
     # Print ASCII Banner
     print_banner()
 
@@ -453,8 +492,8 @@ if __name__ == "__main__":
     # Fetch MP3 Files
     fetch_songs()
 
-    # Select Ollama model — use config value if set, otherwise pick interactively
-    configured_model = get_ollama_model()
+    # Select Gemini model — use config value if set, otherwise pick interactively
+    configured_model = get_gemini_model()
     if configured_model:
         select_model(configured_model)
         success(f"Using configured model: {configured_model}")
@@ -462,14 +501,14 @@ if __name__ == "__main__":
         try:
             models = list_models()
         except Exception as e:
-            error(f"Could not connect to Ollama: {e}")
+            error(f"Could not connect to Gemini: {e}")
             sys.exit(1)
 
         if not models:
-            error("No models found on Ollama. Pull a model first (e.g. 'ollama pull llama3.2:3b').")
+            error("No models found on Gemini. Pull a model first.")
             sys.exit(1)
 
-        info("\n========== OLLAMA MODELS =========", False)
+        info("\n========== GEMINI MODELS =========", False)
         for idx, model_name in enumerate(models):
             print(colored(f" {idx + 1}. {model_name}", "cyan"))
         info("==================================\n", False)

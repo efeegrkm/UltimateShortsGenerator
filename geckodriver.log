@@ -1,0 +1,597 @@
+1774970196459	geckodriver	INFO	Listening on 127.0.0.1:63878
+1774970199528	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "--headless" "-profile" "C:\\\\Users\\\\Asu ... \Roaming\\\\Mozilla\\\\Firefox\\\\Profiles" "--remote-debugging-port" "63879" "--remote-allow-hosts" "localhost" "-no-remote"
+*** You are running in headless mode.
+Dynamically enable window occlusion 0
+1774970199826	Marionette	INFO	Marionette enabled
+1774970199895	Marionette	INFO	Listening on port 63886
+WebDriver BiDi listening on ws://127.0.0.1:63879
+Read port: 63886
+1774970199982	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+JavaScript error: resource://gre/modules/PromiseWorker.sys.mjs, line 75: Error: Could not get children of `C:\Users\Asus\AppData\Roaming\Mozilla\Firefox\Profiles\thumbnails': directory does not exist (NS_ERROR_FILE_NOT_FOUND)
+console.error: [Exception... "Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIWinTaskbar.getTaskbarProgress]"  nsresult: "0x80070057 (NS_ERROR_ILLEGAL_VALUE)"  location: "JS frame :: moz-src:///browser/components/downloads/DownloadsTaskbar.sys.mjs :: #windowsAttachIndicator :: line 183"  data: no]
+console.error: "Experiment visual-card-updates has unknown featureId: newtabRefinedCardsLayout"
+1774970420845	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+1774971202103	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+Exiting due to channel error.
+Exiting due to channel error.
+\Mozilla\\\\Firefox\\\\Profiles" "--remote-debugging-port" "59848" "--remote-allow-hosts" "localhost" "-no-remote"
+Read port: 63886
+*** You are running in headless mode.
+[ERROR osclientcerts] ThreadId(11) module state expected to be set, but it is not
+1774971199037	geckodriver	INFO	Listening on 127.0.0.1:59931
+1774971202085	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "--headless" "-profile" "C:\\\\Users\\\\Asu ... \Roaming\\\\Mozilla\\\\Firefox\\\\Profiles" "--remote-debugging-port" "59932" "--remote-allow-hosts" "localhost" "-no-remote"
+Read port: 63886
+*** You are running in headless mode.
+1774971299554	geckodriver	INFO	Listening on 127.0.0.1:54277
+1774971302607	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "--headless" "-profile" "C:\\\\Users\\\\Asu ... \Roaming\\\\Mozilla\\\\Firefox\\\\Profiles" "--remote-debugging-port" "54278" "--remote-allow-hosts" "localhost" "-no-remote"
+Read port: 63886
+*** You are running in headless mode.
+1774971302889	Marionette	INFO	Marionette enabled
+1774971302920	Marionette	INFO	Listening on port 54287
+WebDriver BiDi listening on ws://127.0.0.1:54278
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.error: NewTabGleanUtils: "Failed to complete registration of metrics and pings found in runtime metrics JSON:" (new TypeError("NetworkError when attempting to fetch resource.", ""))
+console.error: "Experiment visual-card-updates has unknown featureId: newtabRefinedCardsLayout"
+console.error: [Exception... "Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIWinTaskbar.getTaskbarProgress]"  nsresult: "0x80070057 (NS_ERROR_ILLEGAL_VALUE)"  location: "JS frame :: moz-src:///browser/components/downloads/DownloadsTaskbar.sys.mjs :: #windowsAttachIndicator :: line 183"  data: no]
+Read port: 54287
+1774971304750	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+Exiting due to channel error.
+1775058346514	geckodriver	INFO	Listening on 127.0.0.1:50445
+1775058349594	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "--headless" "-profile" "C:\\\\Users\\\\Asu ... \Roaming\\\\Mozilla\\\\Firefox\\\\Profiles" "--remote-debugging-port" "50446" "--remote-allow-hosts" "localhost" "-no-remote"
+Read port: 54287
+*** You are running in headless mode.
+1775058349893	Marionette	INFO	Marionette enabled
+1775058349939	Marionette	INFO	Listening on port 50455
+WebDriver BiDi listening on ws://127.0.0.1:50446
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.error: NewTabGleanUtils: "Failed to complete registration of metrics and pings found in runtime metrics JSON:" (new TypeError("NetworkError when attempting to fetch resource.", ""))
+console.error: "Experiment visual-card-updates has unknown featureId: newtabRefinedCardsLayout"
+console.error: [Exception... "Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIWinTaskbar.getTaskbarProgress]"  nsresult: "0x80070057 (NS_ERROR_ILLEGAL_VALUE)"  location: "JS frame :: moz-src:///browser/components/downloads/DownloadsTaskbar.sys.mjs :: #windowsAttachIndicator :: line 183"  data: no]
+Read port: 50455
+1775058351809	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+Exiting due to channel error.
+Exiting due to channel error.
+Exiting due to channel error.
+Exiting due to channel error.
+Exiting due to channel error.
+1775073106125	geckodriver	INFO	Listening on 127.0.0.1:61140
+1775073109184	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "--headless" "-profile" "C:\\\\Users\\\\Asu ... \Roaming\\\\Mozilla\\\\Firefox\\\\Profiles" "--remote-debugging-port" "61141" "--remote-allow-hosts" "localhost" "-no-remote"
+Read port: 50455
+*** You are running in headless mode.
+1775073109414	Marionette	INFO	Marionette enabled
+1775073109446	Marionette	INFO	Listening on port 61149
+WebDriver BiDi listening on ws://127.0.0.1:61141
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.error: NewTabGleanUtils: "Failed to complete registration of metrics and pings found in runtime metrics JSON:" (new TypeError("NetworkError when attempting to fetch resource.", ""))
+console.error: "Experiment visual-card-updates has unknown featureId: newtabRefinedCardsLayout"
+console.error: [Exception... "Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIWinTaskbar.getTaskbarProgress]"  nsresult: "0x80070057 (NS_ERROR_ILLEGAL_VALUE)"  location: "JS frame :: moz-src:///browser/components/downloads/DownloadsTaskbar.sys.mjs :: #windowsAttachIndicator :: line 183"  data: no]
+Read port: 61149
+1775073111333	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+Exiting due to channel error.
+Exiting due to channel error.
+Exiting due to channel error.
+Exiting due to channel error.
+1775077235235	geckodriver	INFO	Listening on 127.0.0.1:51650
+1775077238306	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "--headless" "-profile" "C:\\\\Users\\\\Asu ... \Roaming\\\\Mozilla\\\\Firefox\\\\Profiles" "--remote-debugging-port" "51651" "--remote-allow-hosts" "localhost" "-no-remote"
+Read port: 61149
+*** You are running in headless mode.
+1775077238606	Marionette	INFO	Marionette enabled
+1775077238641	Marionette	INFO	Listening on port 51888
+WebDriver BiDi listening on ws://127.0.0.1:51651
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.error: NewTabGleanUtils: "Failed to complete registration of metrics and pings found in runtime metrics JSON:" (new TypeError("NetworkError when attempting to fetch resource.", ""))
+console.error: "Experiment visual-card-updates has unknown featureId: newtabRefinedCardsLayout"
+console.error: [Exception... "Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIWinTaskbar.getTaskbarProgress]"  nsresult: "0x80070057 (NS_ERROR_ILLEGAL_VALUE)"  location: "JS frame :: moz-src:///browser/components/downloads/DownloadsTaskbar.sys.mjs :: #windowsAttachIndicator :: line 183"  data: no]
+Read port: 51888
+1775077240487	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+Exiting due to channel error.
+Exiting due to channel error.
+1775077753413	geckodriver	INFO	Listening on 127.0.0.1:65307
+1775077756467	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "--headless" "-profile" "C:\\\\Users\\\\Asu ... \Roaming\\\\Mozilla\\\\Firefox\\\\Profiles" "--remote-debugging-port" "65308" "--remote-allow-hosts" "localhost" "-no-remote"
+Read port: 51888
+*** You are running in headless mode.
+1775077756724	Marionette	INFO	Marionette enabled
+1775077756764	Marionette	INFO	Listening on port 65317
+WebDriver BiDi listening on ws://127.0.0.1:65308
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.error: NewTabGleanUtils: "Failed to complete registration of metrics and pings found in runtime metrics JSON:" (new TypeError("NetworkError when attempting to fetch resource.", ""))
+console.error: "Experiment visual-card-updates has unknown featureId: newtabRefinedCardsLayout"
+console.error: [Exception... "Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIWinTaskbar.getTaskbarProgress]"  nsresult: "0x80070057 (NS_ERROR_ILLEGAL_VALUE)"  location: "JS frame :: moz-src:///browser/components/downloads/DownloadsTaskbar.sys.mjs :: #windowsAttachIndicator :: line 183"  data: no]
+Read port: 65317
+1775077758638	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+1775077787591	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+Exiting due to channel error.
+Exiting due to channel error.
+Exiting due to channel error.
+-headless" "-profile" "C:\\\\Users\\\\Asu ... \Roaming\\\\Mozilla\\\\Firefox\\\\Profiles" "--remote-debugging-port" "50926" "--remote-allow-hosts" "localhost" "-no-remote"
+Read port: 65317
+*** You are running in headless mode.
+[ERROR osclientcerts] ThreadId(14) module state expected to be set, but it is not
+1775143218784	geckodriver	INFO	Listening on 127.0.0.1:65252
+1775143221843	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "--headless" "-profile" "C:\\\\Users\\\\Asu ... \Roaming\\\\Mozilla\\\\Firefox\\\\Profiles" "--remote-debugging-port" "65253" "--remote-allow-hosts" "localhost" "-no-remote"
+Read port: 65317
+*** You are running in headless mode.
+1775143222102	Marionette	INFO	Marionette enabled
+1775143222134	Marionette	INFO	Listening on port 65261
+WebDriver BiDi listening on ws://127.0.0.1:65253
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.error: NewTabGleanUtils: "Failed to complete registration of metrics and pings found in runtime metrics JSON:" (new TypeError("NetworkError when attempting to fetch resource.", ""))
+console.error: "Experiment visual-card-updates has unknown featureId: newtabRefinedCardsLayout"
+console.error: [Exception... "Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIWinTaskbar.getTaskbarProgress]"  nsresult: "0x80070057 (NS_ERROR_ILLEGAL_VALUE)"  location: "JS frame :: moz-src:///browser/components/downloads/DownloadsTaskbar.sys.mjs :: #windowsAttachIndicator :: line 183"  data: no]
+Read port: 65261
+1775143223997	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+1775144730771	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144730874	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144730977	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144731081	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144731185	Marionette	WARN	Connection attempt denied because an active session hasRead port: 651775Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+onette	WARN	Connection attempt denied because an active session has been found
+1775144732639	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144732743	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144732847	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144732951	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144733054	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144733158	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144733262	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144733366	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144733472	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144733577	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144733682	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144733786	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144733889	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144733994	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144734098	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144734202	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144734305	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144734409	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144734513	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144734616	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144734719	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144734822	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144734926	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144735029	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144735132	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144735238	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144735343	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144735449	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144735553	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144735656	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144735759	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144735862	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144735964	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144736066	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144736168	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144736270	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144736372	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144736475	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144736578	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144736680	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144736783	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144736885	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144736989	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144737092	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144737195	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144737297	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144737400	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144737503	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144737605	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144737708	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144737810	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144737913	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144738015	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144738117	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144738219	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144738321	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144738423	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144738526	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144759435	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144759538	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144759642	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144759744	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144759848	Marionette	WARN	Connection attempt denied because an active session hasRead port: 651775Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+Read port: 65261
+onette	WARN	Connection attempt denied because an active session has been found
+1775144761300	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144761404	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144761510	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144761614	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144761720	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144761823	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144761927	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144762030	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144762134	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144762238	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144762341	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144762444	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144762548	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144762652	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144762756	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144762860	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144762963	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144763066	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144763170	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144763273	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144763377	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144763483	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144763587	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144763692	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144763796	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144763899	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144764003	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144764109	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144764213	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144764317	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144764422	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144764524	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144764627	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144764730	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144764834	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144764937	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144765040	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144765143	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144765246	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144765349	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144765453	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144765556	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144765661	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144765764	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144765869	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144765972	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144766076	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144766179	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144766282	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144766385	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144766488	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144766591	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144766695	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144766798	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144766902	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144767005	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144767108	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144767211	Marionette	WARN	Connection attempt denied because an active session has been found
+1775144803219	geckodriver	INFO	Listening on 127.0.0.1:58107
+1775144806275	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "--headless" "-profile" "C:\\\\Users\\\\Asu ... \Roaming\\\\Mozilla\\\\Firefox\\\\Profiles" "--remote-debugging-port" "58108" "--remote-allow-hosts" "localhost" "-no-remote"
+Read port: 65261
+*** You are running in headless mode.
+1775144806462	Marionette	INFO	Marionette enabled
+1775144806494	Marionette	INFO	Listening on port 58116
+WebDriver BiDi listening on ws://127.0.0.1:58108
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.error: NewTabGleanUtils: "Failed to complete registration of metrics and pings found in runtime metrics JSON:" (new TypeError("NetworkError when attempting to fetch resource.", ""))
+console.error: "Experiment visual-card-updates has unknown featureId: newtabRefinedCardsLayout"
+console.error: [Exception... "Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIWinTaskbar.getTaskbarProgress]"  nsresult: "0x80070057 (NS_ERROR_ILLEGAL_VALUE)"  location: "JS frame :: moz-src:///browser/components/downloads/DownloadsTaskbar.sys.mjs :: #windowsAttachIndicator :: line 183"  data: no]
+Read port: 58116
+1775144808425	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+1775149155307	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+Exiting due to channel error.
+Exiting due to channel error.
+\firefox.exe" "--marionette" "--headless" "-profile" "C:\\\\Users\\\\Asu ... \Roaming\\\\Mozilla\\\\Firefox\\\\Profiles" "--remote-debugging-port" "64850" "--remote-allow-hosts" "localhost" "-no-remote"
+Read port: 58116
+*** You are running in headless mode.
+1775164095485	geckodriver	INFO	Listening on 127.0.0.1:51145
+1775164098542	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "--headless" "-profile" "C:\\\\Users\\\\Asu ... \Roaming\\\\Mozilla\\\\Firefox\\\\Profiles" "--remote-debugging-port" "51146" "--remote-allow-hosts" "localhost" "-no-remote"
+Read port: 58116
+*** You are running in headless mode.
+1775164098725	Marionette	INFO	Marionette enabled
+1775164098758	Marionette	INFO	Listening on port 51154
+WebDriver BiDi listening on ws://127.0.0.1:51146
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.error: NewTabGleanUtils: "Failed to complete registration of metrics and pings found in runtime metrics JSON:" (new TypeError("NetworkError when attempting to fetch resource.", ""))
+console.error: "Experiment visual-card-updates has unknown featureId: newtabRefinedCardsLayout"
+console.error: [Exception... "Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIWinTaskbar.getTaskbarProgress]"  nsresult: "0x80070057 (NS_ERROR_ILLEGAL_VALUE)"  location: "JS frame :: moz-src:///browser/components/downloads/DownloadsTaskbar.sys.mjs :: #windowsAttachIndicator :: line 183"  data: no]
+Read port: 51154
+1775164100682	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+1775166238273	Marionette	WARN	Connection attempt denied because an active session has been found
+1775166238376	Marionette	WARN	Connection attempt denied because an active session has been found
+1775166238479	Marionette	WARN	Connection attempt denied because an active session has been found
+1775166238582	Marionette	WARN	Connection attempt denied because an active session has been found
+1775166238685	Marionette	WARN	Connection attempt denied because an active session hasRead port: 511775Read port: 51154
+Read port: 51154
+Read port: 51154
+Read port: 51154
+Read port: 51154
+Read port: 51154
+Read port: 51154
+Read port: 51154
+Read port: 51154
+Read port: 51154
+Read port: 51154
+Read port: 51154
+Read port: 51154
+Read port: 51154
+Read port: 51154
+Read port: 51154
+Read port: 51154
+Read port: 51154
+Read port: 51154
+Read port: 51154
+Read port: 51154
+Read port: 51154
+Read port: 51154
+Read port: 51154
+Read port: 51154
+Read port: 51154
+Read port: 51154
+Read port: 51154
+Read port: 51154
+Read port: 51154
+Read port: 51154
+Read port: 51154
+Read port: 51154
+Read port: 51154
+Read port: 51154
+Read port: 51154
+Read port: 51154
+Read port: 51154
+Read port: 51154
+Read port: 51154
+Read port: 51154
+Read port: 51154
+Read port: 51154
+Read port: 51154
+Read port: 51154
+Read port: 51154
+Read port: 51154
+Read port: 51154
+Read port: 51154
+Read port: 51154
+Read port: 51154
+Read port: 51154
+Read port: 51154
+Read port: 51154
+Read port: 51154
+Read port: 51154
+Read port: 51154
+Read port: 51154
+Read port: 51154
+Read port: 51154
+Read port: 51154
+Read port: 51154
+Read port: 51154
+Read port: 51154
+Read port: 51154
+Read port: 51154
+Read port: 51154
+Read port: 51154
+Read port: 51154
+Read port: 51154
+Read port: 51154
+Read port: 51154
+Read port: 51154
+Read port: 51154
+been found
+1775166240130	Marionette	WARN	Connection attempt denied because an active session has been found
+1775166240232	Marionette	WARN	Connection attempt denied because an active session has been found
+1775166240335	Marionette	WARN	Connection attempt denied because an active session has been found
+1775166240438	Marionette	WARN	Connection attempt denied because an active session has been found
+1775166240541	Marionette	WARN	Connection attempt denied because an active session has been found
+1775166240643	Marionette	WARN	Connection attempt denied because an active session has been found
+1775166240746	Marionette	WARN	Connection attempt denied because an active session has been found
+1775166240850	Marionette	WARN	Connection attempt denied because an active session has been found
+1775166240953	Marionette	WARN	Connection attempt denied because an active session has been found
+1775166241055	Marionette	WARN	Connection attempt denied because an active session has been found
+1775166241159	Marionette	WARN	Connection attempt denied because an active session has been found
+1775166241261	Marionette	WARN	Connection attempt denied because an active session has been found
+1775166241365	Marionette	WARN	Connection attempt denied because an active session has been found
+1775166241468	Marionette	WARN	Connection attempt denied because an active session has been found
+1775166241571	Marionette	WARN	Connection attempt denied because an active session has been found
+1775166241674	Marionette	WARN	Connection attempt denied because an active session has been found
+1775166241777	Marionette	WARN	Connection attempt denied because an active session has been found
+1775166241880	Marionette	WARN	Connection attempt denied because an active session has been found
+1775166241982	Marionette	WARN	Connection attempt denied because an active session has been found
+1775166242085	Marionette	WARN	Connection attempt denied because an active session has been found
+1775166242189	Marionette	WARN	Connection attempt denied because an active session has been found
+1775166242291	Marionette	WARN	Connection attempt denied because an active session has been found
+1775166242397	Marionette	WARN	Connection attempt denied because an active session has been found
+1775166242499	Marionette	WARN	Connection attempt denied because an active session has been found
+1775166242603	Marionette	WARN	Connection attempt denied because an active session has been found
+1775166242706	Marionette	WARN	Connection attempt denied because an active session has been found
+1775166242809	Marionette	WARN	Connection attempt denied because an active session has been found
+1775166242911	Marionette	WARN	Connection attempt denied because an active session has been found
+1775166243016	Marionette	WARN	Connection attempt denied because an active session has been found
+1775166243118	Marionette	WARN	Connection attempt denied because an active session has been found
+1775166243220	Marionette	WARN	Connection attempt denied because an active session has been found
+1775166243324	Marionette	WARN	Connection attempt denied because an active session has been found
+1775166243426	Marionette	WARN	Connection attempt denied because an active session has been found
+1775166243528	Marionette	WARN	Connection attempt denied because an active session has been found
+1775166243630	Marionette	WARN	Connection attempt denied because an active session has been found
+1775166243732	Marionette	WARN	Connection attempt denied because an active session has been found
+1775166243834	Marionette	WARN	Connection attempt denied because an active session has been found
+1775166243936	Marionette	WARN	Connection attempt denied because an active session has been found
+1775166244038	Marionette	WARN	Connection attempt denied because an active session has been found
+1775166244141	Marionette	WARN	Connection attempt denied because an active session has been found
+1775166244245	Marionette	WARN	Connection attempt denied because an active session has been found
+1775166244348	Marionette	WARN	Connection attempt denied because an active session has been found
+1775166244451	Marionette	WARN	Connection attempt denied because an active session has been found
+1775166244554	Marionette	WARN	Connection attempt denied because an active session has been found
+1775166244657	Marionette	WARN	Connection attempt denied because an active session has been found
+1775166244759	Marionette	WARN	Connection attempt denied because an active session has been found
+1775166244861	Marionette	WARN	Connection attempt denied because an active session has been found
+1775166244964	Marionette	WARN	Connection attempt denied because an active session has been found
+1775166245066	Marionette	WARN	Connection attempt denied because an active session has been found
+1775166245168	Marionette	WARN	Connection attempt denied because an active session has been found
+1775166245271	Marionette	WARN	Connection attempt denied because an active session has been found
+1775166245374	Marionette	WARN	Connection attempt denied because an active session has been found
+1775166245477	Marionette	WARN	Connection attempt denied because an active session has been found
+1775166245579	Marionette	WARN	Connection attempt denied because an active session has been found
+1775166245681	Marionette	WARN	Connection attempt denied because an active session has been found
+1775166245783	Marionette	WARN	Connection attempt denied because an active session has been found
+1775166245886	Marionette	WARN	Connection attempt denied because an active session has been found
+1775166245988	Marionette	WARN	Connection attempt denied because an active session has been found
+1775166246091	Marionette	WARN	Connection attempt denied because an active session has been found
+1775166246192	Marionette	WARN	Connection attempt denied because an active session has been found
+1775166246294	Marionette	WARN	Connection attempt denied because an active session has been found
+1775166246397	Marionette	WARN	Connection attempt denied because an active session has been found
+1775166270846	geckodriver	INFO	Listening on 127.0.0.1:54917
+1775166273920	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "--headless" "-profile" "C:\\\\Users\\\\Asu ... \Roaming\\\\Mozilla\\\\Firefox\\\\Profiles" "--remote-debugging-port" "54918" "--remote-allow-hosts" "localhost" "-no-remote"
+Read port: 51154
+*** You are running in headless mode.
+1775166274109	Marionette	INFO	Marionette enabled
+1775166274140	Marionette	INFO	Listening on port 54926
+WebDriver BiDi listening on ws://127.0.0.1:54918
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.error: NewTabGleanUtils: "Failed to complete registration of metrics and pings found in runtime metrics JSON:" (new TypeError("NetworkError when attempting to fetch resource.", ""))
+console.error: "Experiment visual-card-updates has unknown featureId: newtabRefinedCardsLayout"
+console.error: [Exception... "Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIWinTaskbar.getTaskbarProgress]"  nsresult: "0x80070057 (NS_ERROR_ILLEGAL_VALUE)"  location: "JS frame :: moz-src:///browser/components/downloads/DownloadsTaskbar.sys.mjs :: #windowsAttachIndicator :: line 183"  data: no]
+Read port: 54926
+1775166276069	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+1775166586349	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+Exiting due to channel error.
+Exiting due to channel error.
+\firefox.exe" "--marionette" "--headless" "-profile" "C:\\\\Users\\\\Asu ... \Roaming\\\\Mozilla\\\\Firefox\\\\Profiles" "--remote-debugging-port" "62747" "--remote-allow-hosts" "localhost" "-no-remote"
+Read port: 54926
+*** You are running in headless mode.
+[ERROR osclientcerts] ThreadId(16) module state expected to be set, but it is not
+1775167242210	geckodriver	INFO	Listening on 127.0.0.1:50705
+1775167245276	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "--headless" "-profile" "C:\\\\Users\\\\Asu ... \Roaming\\\\Mozilla\\\\Firefox\\\\Profiles" "--remote-debugging-port" "50706" "--remote-allow-hosts" "localhost" "-no-remote"
+Read port: 54926
+*** You are running in headless mode.
+1775167245455	Marionette	INFO	Marionette enabled
+1775167245485	Marionette	INFO	Listening on port 50714
+WebDriver BiDi listening on ws://127.0.0.1:50706
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.error: NewTabGleanUtils: "Failed to complete registration of metrics and pings found in runtime metrics JSON:" (new TypeError("NetworkError when attempting to fetch resource.", ""))
+console.error: "Experiment visual-card-updates has unknown featureId: newtabRefinedCardsLayout"
+console.error: [Exception... "Component returned failure code: 0x80070057 (NS_ERROR_ILLEGAL_VALUE) [nsIWinTaskbar.getTaskbarProgress]"  nsresult: "0x80070057 (NS_ERROR_ILLEGAL_VALUE)"  location: "JS frame :: moz-src:///browser/components/downloads/DownloadsTaskbar.sys.mjs :: #windowsAttachIndicator :: line 183"  data: no]
+Read port: 50714
+1775167247434	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+Exiting due to channel error.
+Exiting due to channel error.

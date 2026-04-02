@@ -3,7 +3,7 @@
   "firefox_profile": "",
   "headless": false,
   "ollama_base_url": "http://127.0.0.1:11434",
-  "ollama_model": "",
+  "gemini_model": "",
   "twitter_language": "English",
   "nanobanana2_api_base_url": "https://generativelanguage.googleapis.com/v1beta",
   "nanobanana2_api_key": "",

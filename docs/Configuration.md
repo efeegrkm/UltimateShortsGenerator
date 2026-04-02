@@ -8,7 +8,7 @@ All your configurations will be in a file in the root directory, called `config.
 - `firefox_profile`: `string` - The path to your Firefox profile. This is used to use your Social Media Accounts without having to log in every time you run the application.
 - `headless`: `boolean` - If `true`, the application will run in headless mode. This means that the browser will not be visible.
 - `ollama_base_url`: `string` - Base URL of your local Ollama server (default: `http://127.0.0.1:11434`).
-- `ollama_model`: `string` - Ollama model to use for text generation (e.g. `llama3.2:3b`). If empty, the app queries Ollama at startup and lets you pick from the available models interactively.
+- `gemini_models`: `string` - gemini model to use for text generation. If empty, the app queries Ollama at startup and lets you pick from the available models interactively.
 - `twitter_language`: `string` - The language that will be used to generate & post tweets.
 - `nanobanana2_api_base_url`: `string` - Nano Banana 2 API base URL (default: `https://generativelanguage.googleapis.com/v1beta`).
 - `nanobanana2_api_key`: `string` - API key for Nano Banana 2 (Gemini image API). If empty, MPV2 falls back to environment variable `GEMINI_API_KEY`.
@@ -53,7 +53,7 @@ All your configurations will be in a file in the root directory, called `config.
   "firefox_profile": "",
   "headless": false,
   "ollama_base_url": "http://127.0.0.1:11434",
-  "ollama_model": "",
+  "gemini_model": "",
   "twitter_language": "English",
   "nanobanana2_api_base_url": "https://generativelanguage.googleapis.com/v1beta",
   "nanobanana2_api_key": "",

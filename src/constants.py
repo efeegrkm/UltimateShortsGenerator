@@ -28,7 +28,8 @@ TWITTER_CRON_OPTIONS = [
 ]
 
 YOUTUBE_OPTIONS = [
-    "Upload Short",
+    "Generate Short",
+    "Generate Short (Trending News)",
     "Show all Shorts",
     "Setup CRON Job",
     "Quit"

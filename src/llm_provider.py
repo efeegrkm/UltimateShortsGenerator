@@ -1,6 +1,7 @@
 import ollama
+import requests
 
-from config import get_ollama_base_url
+from config import get_nanobanana2_api_key, get_ollama_base_url, get_gemini_model
 
 _selected_model: str | None = None
 
@@ -40,24 +41,41 @@ def get_active_model() -> str | None:
 
 def generate_text(prompt: str, model_name: str = None) -> str:
     """
-    Generates text using the local Ollama server.
-
-    Args:
-        prompt (str): User prompt
-        model_name (str): Optional model name override
-
-    Returns:
-        response (str): Generated text
+    Generates text using Google's Gemini API.
     """
-    model = model_name or _selected_model
-    if not model:
-        raise RuntimeError(
-            "No Ollama model selected. Call select_model() first or pass model_name."
-        )
+    api_key = get_nanobanana2_api_key()
+    if not api_key:
+        print("[!] Error: Google API key is not set. Please set 'nanobanana2_api_key' in config.json.")
+        return ""
 
-    response = _client().chat(
-        model=model,
-        messages=[{"role": "user", "content": prompt}],
-    )
+    if not model_name:
+        model_name = get_gemini_model()
+        
+    if not model_name:
+        model_name = "gemini-pro-latest"
+    # -----------------------
 
-    return response["message"]["content"].strip()
+    base_url = "https://generativelanguage.googleapis.com/v1beta/models"
+    endpoint = f"{base_url}/{model_name}:generateContent?key={api_key}"
+    
+    payload = {
+        "contents": [{
+            "parts": [{"text": prompt}]
+        }],
+        "generationConfig": {
+            "temperature": 0.7,
+        }
+    }
+    
+    try:
+        response = requests.post(endpoint, json=payload, timeout=60)
+        response.raise_for_status()
+        data = response.json()
+        
+        return data['candidates'][0]['content']['parts'][0]['text']
+        
+    except Exception as e:
+        print(f"[!] Gemini API Error: {e}")
+        if 'response' in locals() and response is not None:
+            print(f"[!] Details: {response.text}")
+        return ""

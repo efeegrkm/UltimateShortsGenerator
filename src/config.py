@@ -79,15 +79,15 @@ def get_ollama_base_url() -> str:
     with open(os.path.join(ROOT_DIR, "config.json"), "r") as file:
         return json.load(file).get("ollama_base_url", "http://127.0.0.1:11434")
 
-def get_ollama_model() -> str:
+def get_gemini_model() -> str:
     """
-    Gets the Ollama model name from the config file.
+    Gets the Gemini model name from the config file.
 
     Returns:
-        model (str): The Ollama model name, or empty string if not set.
+        model (str): The Gemini model name, or empty string if not set.
     """
     with open(os.path.join(ROOT_DIR, "config.json"), "r") as file:
-        return json.load(file).get("ollama_model", "")
+        return json.load(file).get("gemini_model", "")
 
 def get_twitter_language() -> str:
     """

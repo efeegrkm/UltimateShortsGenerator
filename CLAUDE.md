@@ -43,7 +43,7 @@ Two service categories use a string-based dispatch pattern configured in `config
 
 | Category | Config key | Options |
 |---|---|---|
-| LLM | `ollama_model` | Ollama (via `ollama` Python SDK). If empty, user picks from available models at startup. |
+| LLM | `gemini_model` | Gemini. If empty, user picks from available models at startup. |
 | Image gen | — | `nanobanana2` (Gemini image API) |
 | STT | `stt_provider` | `local_whisper`, `third_party_assemblyai` |
 
